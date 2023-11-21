@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">FinalGroupProject</string>
+    <string name="go_to_deezer_song_search">Go to Deezer Song Search</string>
+    <string name="go_to_dictionary">Go to Dictionary</string>
+    <string name="go_to_sunrise_sunset_lookup"><![CDATA[Go to Sunrise&Sunset Lookup]]></string>
+    <string name="go_to_recipe_search">Go to Recipe Search</string>
+    <string name="android_final_projects">Android Final Projects</string>
+</resources>
