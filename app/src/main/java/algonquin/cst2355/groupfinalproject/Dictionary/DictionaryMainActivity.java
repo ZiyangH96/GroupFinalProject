@@ -36,6 +36,8 @@ public class DictionaryMainActivity extends AppCompatActivity {
             int duration = Toast.LENGTH_SHORT;
             Toast toast = Toast.makeText(this, text, duration);
             toast.show();
+            // reset input
+            binding.enterWord.setText("");
         });
         resetBtn.setOnClickListener(view -> {
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -47,7 +49,7 @@ public class DictionaryMainActivity extends AppCompatActivity {
                                 // TODO implement method to get the definition back
                                 })
                                 .show();
-
+                        binding.enterWord.setText("");
                     })
                     .setNegativeButton("No", (dialog, cl)->{} )
                     .create().show();
