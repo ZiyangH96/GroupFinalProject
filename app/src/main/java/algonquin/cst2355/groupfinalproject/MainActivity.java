@@ -17,14 +17,17 @@ public class MainActivity extends AppCompatActivity {
         binding =ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
+        // 4 buttons for each sub project
         Button deezerBtn = binding.deezerButton;
         Button recipeBtn = binding.recipeButton;
         Button sunriseBtn = binding.sunriseButton;
         Button dictionaryBtn = binding.dictionaryButton;
 
+        // click the button to jump to the projects
         dictionaryBtn.setOnClickListener(v -> {
             Intent goToDictionary = new Intent(MainActivity.this, DictionaryMainActivity.class);
             startActivity(goToDictionary);
         });
+
     }
 }
