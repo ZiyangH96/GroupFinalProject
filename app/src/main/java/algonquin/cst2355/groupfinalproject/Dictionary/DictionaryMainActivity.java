@@ -24,6 +24,7 @@ public class DictionaryMainActivity extends AppCompatActivity {
         binding = DictionaryActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
+=======
         SharedPreferences prefs = getSharedPreferences("MyData", Context.MODE_PRIVATE);
         String emailAddress = prefs.getString("Word","");
         SharedPreferences.Editor editor = prefs.edit();
