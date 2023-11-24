@@ -15,5 +15,8 @@ public class DictionaryMainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         binding = DictionaryActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+
+        // test code
+        //
     }
 }
