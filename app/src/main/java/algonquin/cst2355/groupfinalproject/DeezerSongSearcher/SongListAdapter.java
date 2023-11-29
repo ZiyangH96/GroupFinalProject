@@ -1,5 +1,5 @@
 package algonquin.cst2355.groupfinalproject.DeezerSongSearcher;
-
+import algonquin.cst2355.groupfinalproject.R;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;

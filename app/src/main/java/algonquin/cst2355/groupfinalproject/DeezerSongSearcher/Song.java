@@ -6,62 +6,82 @@ import androidx.room.*;
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
 import java.util.*;
-
+import com.squareup.picasso.Picasso;
 // Song.java
 @Entity
 public class Song {
     @PrimaryKey(autoGenerate = true)
     private long id;
+    // Getter for id
+    public long getId() {
+        return id;
+    }
+    public void setId(long id) {
+        this.id = id;
+    }
+
+
+
 
     @ColumnInfo(name = "title")
     private String title;
 
+    public Song(String title, String duration, String albumName, String albumCoverUrl) {
+    }
+
+    public String getTitle() {
+        return title;
+    }
     @ColumnInfo(name = "duration")
     private String duration;
-
+    public String getDuration() {
+        return duration;
+    }
     @ColumnInfo(name = "albumName")
     private String albumName;
-
+    public String getAlbumName() {
+        return albumName;
+    }
+    
     @ColumnInfo(name = "albumCoverUrl")
     private String albumCoverUrl;
 
-    // Constructor, getters, and setters
+    public String getAlbumCoverUrl() {
+        return albumCoverUrl;
+    }
+
+
+
+
+    // Setter for title
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    // Setter for duration
+    public void setDuration(String duration) {
+        this.duration = duration;
+    }
+
+    // Setter for albumName
+    public void setAlbumName(String albumName) {
+        this.albumName = albumName;
+    }
+
+    // Setter for albumCoverUrl
+    public void setAlbumCoverUrl(String albumCoverUrl) {
+        this.albumCoverUrl = albumCoverUrl;
+    }
+
+
+
+
+// Constructor, getters, and setters
 
     // You can use annotations to customize the column names, indexes, etc.
-}
-
-// SongDao.java
-@Dao
-public interface SongDao {
-    @Insert
-    void insert(Song song);
-
-    @Delete
-    void delete(Song song);
-
-    @Query("SELECT * FROM Song")
-    List<Song> getAllSongs();
 }
 
 // AppDatabase.java
 
 
-
-@Database(entities = {Song.class}, version = 1)
-public abstract class AppDatabase extends RoomDatabase {
-
-    private static AppDatabase instance;
-
-    public abstract SongDao songDao();
-
-    public static synchronized AppDatabase getInstance(Context context) {
-        if (instance == null) {
-            instance = Room.databaseBuilder(
-                            context.getApplicationContext(),
-                            AppDatabase.class,
-                            "song_database"
-                    )
-                    .fallbackToDestructiveMigration()
-                    .build();
-        }
 

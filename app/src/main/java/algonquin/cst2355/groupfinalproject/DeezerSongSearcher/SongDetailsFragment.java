@@ -1,5 +1,5 @@
 package algonquin.cst2355.groupfinalproject.DeezerSongSearcher;
-
+import algonquin.cst2355.groupfinalproject.R;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,7 +8,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.fragment.app.Fragment;
-
+import com.squareup.picasso.Picasso;
 
 public class SongDetailsFragment extends Fragment {
 

@@ -1,5 +1,5 @@
 package algonquin.cst2355.groupfinalproject.DeezerSongSearcher;
-
+import algonquin.cst2355.groupfinalproject.R;
 import android.os.Bundle;
 import android.widget.EditText;
 import android.widget.Button;
