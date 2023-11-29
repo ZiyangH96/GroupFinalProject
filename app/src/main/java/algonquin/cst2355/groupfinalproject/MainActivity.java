@@ -9,6 +9,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Button;
 
+import algonquin.cst2355.groupfinalproject.DeezerSongSearcher.DeezerSearchActivity;
 import algonquin.cst2355.groupfinalproject.Dictionary.DictionaryMainActivity;
 import algonquin.cst2355.groupfinalproject.databinding.ActivityMainBinding;
 import algonquin.cst2355.groupfinalproject.R;
@@ -31,6 +32,10 @@ public class MainActivity extends AppCompatActivity {
         // click the button to jump to the projects
         dictionaryBtn.setOnClickListener(v -> {
             Intent goToDictionary = new Intent(MainActivity.this, DictionaryMainActivity.class);
+            startActivity(goToDictionary);
+        });
+        deezerBtn.setOnClickListener(v -> {
+            Intent goToDictionary = new Intent(MainActivity.this, DeezerSearchActivity.class);
             startActivity(goToDictionary);
         });
 

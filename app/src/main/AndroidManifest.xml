@@ -26,7 +26,7 @@
             android:name=".Dictionary.DictionaryMainActivity"
             android:exported="false" />
         <activity
-            android:name=".DeezerSongSearcher.DeezerSongMainActivity"
+            android:name=".DeezerSongSearcher.DeezerSearchActivity"
             android:exported="false" />
         <activity android:name=".RecipeSearch.RecipeSearchMainActivity"
             android:exported="false" />
