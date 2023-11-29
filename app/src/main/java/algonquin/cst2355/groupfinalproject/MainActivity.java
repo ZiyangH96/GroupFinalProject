@@ -1,9 +1,12 @@
 package algonquin.cst2355.groupfinalproject;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.Button;
 
 import algonquin.cst2355.groupfinalproject.Dictionary.DictionaryMainActivity;
@@ -16,6 +19,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         binding =ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+        setSupportActionBar(binding.toolBar);
 
         // 4 buttons for each sub project
         Button deezerBtn = binding.deezerButton;
@@ -29,5 +33,24 @@ public class MainActivity extends AppCompatActivity {
             startActivity(goToDictionary);
         });
 
+    }
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        super.onCreateOptionsMenu(menu);
+        getMenuInflater().inflate(R.menu.menu, menu);
+        return true;
+    }
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+
+        switch( item.getItemId() )
+        {
+            case R.id.dictionaryicon:
+
+                //put your ChatMessage deletion code here. If you select this item, you should show the alert dialog
+                //asking if the user wants to delete this message.
+                break;
+        }
+
+        return true;
     }
 }
