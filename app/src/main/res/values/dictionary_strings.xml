@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="dictionary">Dictionary</string>
+    <string name="enter_a_word">Enter a word</string>
+    <string name="search">Search</string>
+    <string name="help">Reset</string>
+</resources>
