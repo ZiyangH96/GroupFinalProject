@@ -11,4 +11,9 @@
     <string name="android_final_projects">安卓期末</string>
     <string name="help">帮助</string>
     <string name="reset">重置</string>
+    <string name="tracklist_url_placeholder">https://api.deezer.com/tracklist/{ID}</string>
+    <string name="error_fetching_list">获取歌曲列表时出错</string>
+    <string name="tracklist_url_not_available">曲目列表 URL 不可用</string>
+    <string name="song_title_placeholder">歌名</string>
+    <string name="album_name_placeholder">专辑名称</string>
 </resources>

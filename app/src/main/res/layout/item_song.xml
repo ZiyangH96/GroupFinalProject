@@ -1,0 +1,36 @@
+<!-- res/layout/item_song.xml -->
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="8dp">
+
+    <ImageView
+        android:id="@+id/albumCoverImageView"
+        android:layout_width="64dp"
+        android:layout_height="64dp"
+        android:scaleType="centerCrop"
+        android:src="@drawable/placeholder_cover" />
+
+    <TextView
+        android:id="@+id/titleTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/albumCoverImageView"
+        android:layout_marginStart="8dp"
+        android:text="Song Title"
+        android:textSize="18sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/albumNameTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/titleTextView"
+        android:layout_toRightOf="@id/albumCoverImageView"
+        android:layout_marginStart="8dp"
+        android:text="Album Name"
+        android:textSize="14sp" />
+
+    <!-- Add more TextViews for other song details if needed -->
+
+</RelativeLayout>

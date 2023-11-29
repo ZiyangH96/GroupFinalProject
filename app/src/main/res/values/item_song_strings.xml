@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- res/values/strings.xml -->
+<resources>
+    <string name="app_name">GroupFinalProject</string>
+
+    <!-- Example strings for SongListFragment -->
+    <string name="tracklist_url_placeholder">https://api.deezer.com/tracklist/{ID}</string>
+    <string name="error_fetching_list">Error fetching song list</string>
+    <string name="tracklist_url_not_available">Tracklist URL not available</string>
+
+    <!-- Example strings for ItemView in RecyclerView -->
+    <string name="song_title_placeholder">Song Title</string>
+    <string name="album_name_placeholder">Album Name</string>
+</resources>
