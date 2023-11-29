@@ -2,6 +2,7 @@ package algonquin.cst2355.groupfinalproject.Dictionary;
 
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
@@ -32,7 +33,11 @@ import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.concurrent.atomic.AtomicReference;
 
+import algonquin.cst2355.groupfinalproject.DeezerSongSearcher.DeezerSongMainActivity;
+import algonquin.cst2355.groupfinalproject.MainActivity;
 import algonquin.cst2355.groupfinalproject.R;
+import algonquin.cst2355.groupfinalproject.RecipeSearch.RecipeSearchMainActivity;
+import algonquin.cst2355.groupfinalproject.SunriseSunset.SunriseSunsetMainActivity;
 import algonquin.cst2355.groupfinalproject.databinding.DictionaryActivityMainBinding;
 
 public class DictionaryMainActivity extends AppCompatActivity {
@@ -69,12 +74,12 @@ public class DictionaryMainActivity extends AppCompatActivity {
         ArrayList<MeaningDetails> meaningList = new ArrayList<>();
         resetBtn.setOnClickListener(view -> {
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
-            builder.setTitle("Reset")
-                    .setMessage("Do you want to reset?")
+            builder.setTitle(R.string.reset)
+                    .setMessage(getMessage())
                     .setPositiveButton("Yes",(dialog,cl)->{
                         meaningList.clear();
-                        binding.dictionaryTitle.setText("Title");
-                        binding.definition.setText("Definition");
+                        binding.dictionaryTitle.setText(R.string.dictionary);
+                        binding.definition.setText(R.string.definition);
                         Snackbar.make(et, "reset",Snackbar.LENGTH_SHORT)
                                 .setAction("Undo", clk ->{
                                 // TODO implement method to get the definition back
@@ -151,6 +156,11 @@ public class DictionaryMainActivity extends AppCompatActivity {
         binding.enterWord.setText("");
     }
 
+    @NonNull
+    private static String getMessage() {
+        return "Do you want to reset?";
+    }
+
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
 
@@ -159,11 +169,11 @@ public class DictionaryMainActivity extends AppCompatActivity {
             // this case allows going to dictionary by clicking the icon
             case R.id.dictionary_icon:
                 AlertDialog.Builder builder = new AlertDialog.Builder(this);
-                builder.setTitle("Reset")
+                builder.setTitle(R.string.reset)
                         .setMessage("Do you want to reset?")
                         .setPositiveButton("Yes",(dialog,cl)->{
-                            binding.dictionaryTitle.setText("Dictionary");
-                            binding.definition.setText("Definition");
+                            binding.dictionaryTitle.setText(R.string.dictionary);
+                            binding.definition.setText(R.string.definition);
                             binding.enterWord.setText("");
                         })
                         .setNegativeButton("No", (dialog, cl)->{} )
@@ -171,13 +181,45 @@ public class DictionaryMainActivity extends AppCompatActivity {
                 break ;
             case R.id.help:
                 AlertDialog.Builder builder2 = new AlertDialog.Builder(this);
-                builder2.setTitle("Help")
-                        .setMessage("Enter a word then click the Search button. The app will help you find" +
-                                "the dictionary definition for the word.")
-                        .setPositiveButton("Thanks",(dialog,cl)->{
+                builder2.setTitle(R.string.help)
+                        .setMessage(R.string.help_text)
+                        .setPositiveButton(R.string.sure,(dialog,cl)->{
                         })
                         .create().show();
                 //put other go-to icons here
+                break;
+            case R.id.deezer_icon:
+                AlertDialog.Builder builder3 = new AlertDialog.Builder(this);
+                builder3.setTitle(R.string.deezer)
+                        .setPositiveButton(R.string.sure,(dialog,cl)->{
+                            Intent goBackToMain = new Intent(DictionaryMainActivity.this, DeezerSongMainActivity.class);
+                            startActivity(goBackToMain);
+                        })
+                        .setNegativeButton(R.string.nothx,(dialog,cl)->{
+                        })
+                        .create().show();
+                break;
+            case R.id.sunrise_icon:
+                AlertDialog.Builder builder4 = new AlertDialog.Builder(this);
+                builder4.setTitle(R.string.sunrise)
+                        .setPositiveButton(R.string.sure,(dialog,cl)->{
+                            Intent goBackToMain = new Intent(DictionaryMainActivity.this, SunriseSunsetMainActivity.class);
+                            startActivity(goBackToMain);
+                        })
+                        .setNegativeButton(R.string.nothx,(dialog,cl)->{
+                        })
+                        .create().show();
+                break;
+            case R.id.recipe_icon:
+                AlertDialog.Builder builder5 = new AlertDialog.Builder(this);
+                builder5.setTitle(R.string.recipe)
+                        .setPositiveButton(R.string.sure,(dialog,cl)->{
+                            Intent goBackToMain = new Intent(DictionaryMainActivity.this, RecipeSearchMainActivity.class);
+                            startActivity(goBackToMain);
+                        })
+                        .setNegativeButton(R.string.nothx,(dialog,cl)->{
+                        })
+                        .create().show();
                 break;
         }
         return super.onOptionsItemSelected(item);

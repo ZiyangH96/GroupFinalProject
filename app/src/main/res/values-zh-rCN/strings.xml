@@ -10,6 +10,13 @@
     <string name="go_to_recipe_search">前往菜谱查询</string>
     <string name="android_final_projects">安卓期末</string>
     <string name="help">帮助</string>
+    <string name="help_text">你可以输入一个单词，查询其英文含义</string>
     <string name="reset">重置</string>
     <string name="definition">定义</string>
+    <string name="searching">搜索中</string>
+    <string name="sure">好的</string>
+    <string name="nothx">不用了</string>
+    <string name="deezer">前往歌曲搜索</string>
+    <string name="sunrise">前往日出日落查询</string>
+    <string name="recipe">前往食谱查询</string>
 </resources>

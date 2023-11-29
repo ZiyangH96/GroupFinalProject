@@ -4,5 +4,12 @@
     <string name="enter_a_word">Enter a word</string>
     <string name="search">Search</string>
     <string name="help">Help</string>
+    <string name="help_text">Help</string>
     <string name="reset">Reset</string>
+    <string name="searching">Searching</string>
+    <string name="sure">Sure</string>
+    <string name="nothx">No,thanks</string>
+    <string name="deezer">Go to Deezer Song search</string>
+    <string name="sunrise">Go to sunrise&amp;sunset lookup</string>
+    <string name="recipe">Go to recipe search</string>
 </resources>
