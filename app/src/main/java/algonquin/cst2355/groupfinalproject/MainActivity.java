@@ -11,6 +11,7 @@ import android.widget.Button;
 
 import algonquin.cst2355.groupfinalproject.Dictionary.DictionaryMainActivity;
 import algonquin.cst2355.groupfinalproject.databinding.ActivityMainBinding;
+import algonquin.cst2355.groupfinalproject.R;
 
 public class MainActivity extends AppCompatActivity {
     private ActivityMainBinding binding;
@@ -36,21 +37,25 @@ public class MainActivity extends AppCompatActivity {
     }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        super.onCreateOptionsMenu(menu);
+
         getMenuInflater().inflate(R.menu.menu, menu);
-        return true;
+        return super.onCreateOptionsMenu(menu);
     }
+
+    @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
 
         switch( item.getItemId() )
         {
-            case R.id.dictionaryicon:
+            // this case allows going to dictionary by clicking the icon
+            case R.id.dictionary_icon:
+                Intent goToDictionary = new Intent(MainActivity.this, DictionaryMainActivity.class);
+                startActivity(goToDictionary);
 
-                //put your ChatMessage deletion code here. If you select this item, you should show the alert dialog
-                //asking if the user wants to delete this message.
+            //put other go-to icons here
                 break;
         }
+        return super.onOptionsItemSelected(item);
 
-        return true;
     }
 }
