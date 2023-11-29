@@ -22,9 +22,9 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="392dp"
         android:ems="10"
+        android:hint="@string/enter_a_word"
         android:inputType="text"
         android:minHeight="48dp"
-        android:hint="@string/enter_a_word"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintStart_toStartOf="parent"
@@ -62,4 +62,16 @@
         android:theme="?attr/actionBarTheme"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/definition"
+        android:layout_width="395dp"
+        android:layout_height="374dp"
+        android:layout_marginTop="12dp"
+        android:text="@string/definition"
+        android:gravity="center"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/dictionaryTitle" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
