@@ -4,6 +4,7 @@ package algonquin.cst2355.groupfinalproject.Dictionary;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.view.Menu;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -13,18 +14,32 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.material.snackbar.Snackbar;
 
+import algonquin.cst2355.groupfinalproject.R;
 import algonquin.cst2355.groupfinalproject.databinding.ActivityMainBinding;
 import algonquin.cst2355.groupfinalproject.databinding.DictionaryActivityMainBinding;
 
 public class DictionaryMainActivity extends AppCompatActivity {
 
     private DictionaryActivityMainBinding binding;
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        super.onCreateOptionsMenu(menu);
+        getMenuInflater().inflate(R.menu.menu, menu);
+        return true;
+    }
+
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         binding = DictionaryActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-=======
+
+
+        setSupportActionBar(binding.dictionaryToolBar);
+
+
         SharedPreferences prefs = getSharedPreferences("MyData", Context.MODE_PRIVATE);
         String emailAddress = prefs.getString("Word","");
         SharedPreferences.Editor editor = prefs.edit();
@@ -55,7 +70,6 @@ public class DictionaryMainActivity extends AppCompatActivity {
                     .setNegativeButton("No", (dialog, cl)->{} )
                     .create().show();
         });
-
 
     }
 }
