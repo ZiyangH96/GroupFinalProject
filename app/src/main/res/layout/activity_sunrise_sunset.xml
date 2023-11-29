@@ -1,0 +1,60 @@
+<!-- res/layout/activity_main.xml -->
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingLeft="16dp"
+    android:paddingTop="16dp"
+    android:paddingRight="16dp"
+    android:paddingBottom="16dp"
+    tools:context=".MainActivity">
+
+    <EditText
+        android:id="@+id/editTextLatitude"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Latitude"/>
+
+    <EditText
+        android:id="@+id/editTextLongitude"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/editTextLatitude"
+        android:layout_marginTop="8dp"
+        android:hint="Longitude"/>
+
+    <Button
+        android:id="@+id/buttonLookup"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/editTextLongitude"
+        android:layout_marginTop="16dp"
+        android:text="Lookup"/>
+
+    <Button
+        android:id="@+id/buttonSaveToFavorites"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/buttonLookup"
+        android:layout_marginTop="16dp"
+        android:text="Save to Favorites"/>
+
+    <Button
+        android:id="@+id/buttonViewFavorites"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/buttonSaveToFavorites"
+        android:layout_marginTop="16dp"
+        android:text="View Favorites"/>
+
+    <Button
+        android:id="@+id/buttonDeleteFavorite"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/buttonViewFavorites"
+        android:layout_marginTop="16dp"
+        android:text="Delete Favorite"/>
+
+    <!-- Add RecyclerView and other UI elements as needed -->
+
+</RelativeLayout>

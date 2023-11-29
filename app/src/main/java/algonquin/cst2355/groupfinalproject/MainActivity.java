@@ -10,6 +10,7 @@ import android.view.MenuItem;
 import android.widget.Button;
 
 import algonquin.cst2355.groupfinalproject.Dictionary.DictionaryMainActivity;
+import algonquin.cst2355.groupfinalproject.SunriseSunset.SunriseSunsetMainActivity;
 import algonquin.cst2355.groupfinalproject.databinding.ActivityMainBinding;
 import algonquin.cst2355.groupfinalproject.R;
 
@@ -32,6 +33,11 @@ public class MainActivity extends AppCompatActivity {
         dictionaryBtn.setOnClickListener(v -> {
             Intent goToDictionary = new Intent(MainActivity.this, DictionaryMainActivity.class);
             startActivity(goToDictionary);
+        });
+
+        sunriseBtn.setOnClickListener(v -> {
+            Intent goToSunrise = new Intent(MainActivity.this, SunriseSunsetMainActivity.class);
+            startActivity(goToSunrise);
         });
 
     }
