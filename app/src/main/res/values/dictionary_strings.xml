@@ -3,5 +3,6 @@
     <string name="dictionary">Dictionary</string>
     <string name="enter_a_word">Enter a word</string>
     <string name="search">Search</string>
-    <string name="help">Reset</string>
+    <string name="help">Help</string>
+    <string name="reset">Reset</string>
 </resources>
