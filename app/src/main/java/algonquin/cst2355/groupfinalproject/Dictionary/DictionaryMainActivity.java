@@ -65,14 +65,6 @@ public class DictionaryMainActivity extends AppCompatActivity {
         RequestQueue queue;
         queue = Volley.newRequestQueue(this);
 
-        searchBtn.setOnClickListener(v->{
-            CharSequence text = "Searching";
-            int duration = Toast.LENGTH_SHORT;
-            Toast toast = Toast.makeText(this, text, duration);
-            toast.show();
-            // reset input
-            binding.enterWord.setText("");
-        });
 
         ArrayList<MeaningDetails> meaningList = new ArrayList<>();
         resetBtn.setOnClickListener(view -> {
@@ -82,6 +74,7 @@ public class DictionaryMainActivity extends AppCompatActivity {
                     .setPositiveButton("Yes",(dialog,cl)->{
                         meaningList.clear();
                         binding.dictionaryTitle.setText("Title");
+                        binding.definition.setText("Definition");
                         Snackbar.make(et, "reset",Snackbar.LENGTH_SHORT)
                                 .setAction("Undo", clk ->{
                                 // TODO implement method to get the definition back
@@ -93,37 +86,52 @@ public class DictionaryMainActivity extends AppCompatActivity {
                     .create().show();
         });
         searchBtn.setOnClickListener(view ->{
+
+            CharSequence text = "Searching";
+                    int duration = Toast.LENGTH_SHORT;
+                    Toast toast = Toast.makeText(this, text, duration);
+                    toast.show();
             try {
                 String url = "https://api.dictionaryapi.dev/api/v2/entries/en/"+et.getText().toString();
 
+                StringBuilder displayText = new StringBuilder();
                 JsonArrayRequest request = new JsonArrayRequest(Request.Method.GET, url, null,
                         (response) -> {
                             try {
-                                int size = response.length();
-                                StringBuilder displayText = new StringBuilder();
-                                for (int i=0;i<size; i++ ){
-                                    JSONObject content = response.getJSONObject(i);
+
+                                    JSONObject content = response.getJSONObject(0);
                                     String word = content.getString("word");
                                     runOnUiThread( (  )  -> {
                                         binding.dictionaryTitle.setText(word);
                                             });
-                                        displayText.append("Word: ").append(word).append("\n\n");
+                                        displayText.append("Word: ").append(word).append("\n");
                                         JSONArray meaningArray = content.getJSONArray("meanings");
-                                        for (int j=0;i<meaningArray.length();i++){
-                                            JSONObject thisPartofSpeech = meaningArray.getJSONObject(j);
-                                            String partOfSpeech = thisPartofSpeech.getString("partOfSppech");
+                                        for (int i=0;i<meaningArray.length();i++){
+                                            JSONObject thisPartofSpeech = meaningArray.getJSONObject(i);
+                                            String partOfSpeech = thisPartofSpeech.getString("partOfSpeech");
                                             displayText.append("Part of Speech: ").append(partOfSpeech).append("\n");
                                             JSONArray definitionArray = thisPartofSpeech.getJSONArray("definitions");
+                                            JSONObject firstDefinition = definitionArray.getJSONObject(0);
+                                            String firstDefinitionText = firstDefinition.getString("definition");
+                                            displayText.append("definitions: \n").append(firstDefinitionText).append("\n");
                                             JSONArray synonymArray = thisPartofSpeech.getJSONArray("synonyms");
+                                            displayText.append("synonym: \n");
+                                            for (int k=0;k<synonymArray.length();k++){
+                                                displayText.append(synonymArray.getString(k)).append("\n");
+                                            }
+                                            displayText.append("antonym: \n");
                                             JSONArray antonymArray = thisPartofSpeech.getJSONArray("antonyms");
-
+                                            for (int k=0;k<antonymArray.length();k++){
+                                                displayText.append(antonymArray.getString(k)).append("\n");
+                                            }
                                             MeaningDetails meaning = new MeaningDetails(partOfSpeech,definitionArray,synonymArray,antonymArray);
                                             meaningList.add(meaning);
-                                        }
+                                            runOnUiThread( (  )  -> {
+                                                binding.definition.setText(displayText.toString());
+                                            });
+
                                 }
 
-                                binding.definition.setText("pig");
-                                binding.definition.setText(displayText.toString());
                             }catch (JSONException e){
                                 e.printStackTrace();
                             }
@@ -134,10 +142,13 @@ public class DictionaryMainActivity extends AppCompatActivity {
                         });
                 queue.add(request);
             }catch (Exception e) {
-                throw new RuntimeException();
+                e.printStackTrace();
             }
                 }
                 );
+
+        // reset input
+        binding.enterWord.setText("");
     }
 
     @Override
@@ -147,10 +158,20 @@ public class DictionaryMainActivity extends AppCompatActivity {
         {
             // this case allows going to dictionary by clicking the icon
             case R.id.dictionary_icon:
-
-            case R.id.help:
                 AlertDialog.Builder builder = new AlertDialog.Builder(this);
-                builder.setTitle("Help")
+                builder.setTitle("Reset")
+                        .setMessage("Do you want to reset?")
+                        .setPositiveButton("Yes",(dialog,cl)->{
+                            binding.dictionaryTitle.setText("Dictionary");
+                            binding.definition.setText("Definition");
+                            binding.enterWord.setText("");
+                        })
+                        .setNegativeButton("No", (dialog, cl)->{} )
+                        .create().show();
+                break ;
+            case R.id.help:
+                AlertDialog.Builder builder2 = new AlertDialog.Builder(this);
+                builder2.setTitle("Help")
                         .setMessage("Enter a word then click the Search button. The app will help you find" +
                                 "the dictionary definition for the word.")
                         .setPositiveButton("Thanks",(dialog,cl)->{
