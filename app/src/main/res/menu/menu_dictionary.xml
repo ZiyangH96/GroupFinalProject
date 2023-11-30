@@ -5,7 +5,22 @@
     <item
         android:id="@+id/dictionary_icon"
         android:icon="@android:drawable/ic_menu_search"
-        android:title="@string/go_to_dictionary"
+        android:title="@string/reset"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/deezer_icon"
+        android:icon="@android:drawable/ic_popup_reminder"
+        android:title="Item"
+        app:showAsAction="always" />
+    <item
+        android:id="@+id/sunrise_icon"
+        android:icon="@android:drawable/presence_away"
+        android:title="sunrise"
+        app:showAsAction="always" />
+    <item
+        android:id="@+id/recipe_icon"
+        android:icon="@android:drawable/ic_menu_myplaces"
+        android:title="Item"
         app:showAsAction="always" />
     <item
         android:id="@+id/help"
