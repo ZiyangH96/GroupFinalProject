@@ -1,8 +1,14 @@
 package algonquin.cst2355.groupfinalproject.DeezerSongSearcher;
 import algonquin.cst2355.groupfinalproject.R;
+
+import android.content.DialogInterface;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.EditText;
 import android.widget.Button;
+
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentTransaction;
 
@@ -54,4 +60,58 @@ public class DeezerSongMainActivity extends AppCompatActivity {
         transaction.addToBackStack(null); // Optional: Adds the transaction to the back stack
         transaction.commit();
     }
+
+
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.main_menu, menu);
+        return true;
+    }
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.action_help) {
+            showHelpDialog();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+
+    private void showHelpDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle(R.string.help)
+                .setMessage(R.string.help_instructions)
+                .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        // Handle the OK button click if needed
+                    }
+                })
+                .show();
+    }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
