@@ -4,8 +4,9 @@
     <string name="enter_a_word">Enter a word</string>
     <string name="search">Search</string>
     <string name="help">Help</string>
-    <string name="help_text">Help</string>
-    <string name="reset">Reset</string>
+    <string name="help_text">You can search the definition of a word by using the search button. \nTo check past searching record, click Past Record. You can also check the detail of a stored record and delete them
+    by clicking them on the Past Record page.</string>
+    <string name="dictionary_record">Past Records</string>
     <string name="searching">Searching</string>
     <string name="sure">Sure</string>
     <string name="nothx">No,thanks</string>
