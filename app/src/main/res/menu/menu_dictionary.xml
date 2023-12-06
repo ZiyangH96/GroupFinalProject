@@ -3,11 +3,6 @@
     xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
-        android:id="@+id/dictionary_icon"
-        android:icon="@android:drawable/ic_menu_search"
-        android:title="@string/reset"
-        app:showAsAction="never" />
-    <item
         android:id="@+id/deezer_icon"
         android:icon="@android:drawable/ic_popup_reminder"
         android:title="Item"
