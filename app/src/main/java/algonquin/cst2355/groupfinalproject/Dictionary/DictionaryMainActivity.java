@@ -33,7 +33,6 @@ import com.google.android.material.snackbar.Snackbar;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.w3c.dom.Text;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -44,7 +43,6 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import algonquin.cst2355.groupfinalproject.DeezerSongSearcher.DeezerSearchActivity;
-import algonquin.cst2355.groupfinalproject.MainActivity;
 
 import algonquin.cst2355.groupfinalproject.R;
 import algonquin.cst2355.groupfinalproject.RecipeSearch.RecipeSearchMainActivity;
@@ -64,6 +62,7 @@ public class DictionaryMainActivity extends AppCompatActivity {
     }
     ArrayList<DictionaryItem> messages = new ArrayList<>();
     DictionaryItemDAO dDAO;
+    int selectedRow;
     DictionaryMainViewModel dictionaryModel;
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -94,10 +93,12 @@ public class DictionaryMainActivity extends AppCompatActivity {
         SharedPreferences.Editor editor = prefs.edit();
         String userInput = prefs.getString("inputText","");
         et.setText(userInput);
-        // get everything from db
+
+        // set up dictionary model
         dictionaryModel = new ViewModelProvider(this).get(DictionaryMainViewModel.class);
         messages = dictionaryModel.messages.getValue();
 
+        // get all data from database for stored records
         Executor thread = Executors.newSingleThreadExecutor();
         thread.execute(() -> {
             List<DictionaryItem> fromDatabase = dDAO.getAllItems();
@@ -114,6 +115,7 @@ public class DictionaryMainActivity extends AppCompatActivity {
                     .addToBackStack("")
                     .commit();
         });
+
 
         myAdapter = new RecyclerView.Adapter<MyRowHolder>() {
             @NonNull
@@ -140,7 +142,7 @@ public class DictionaryMainActivity extends AppCompatActivity {
         // Allow scrolling
         binding.myRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        ArrayList<MeaningDetails> meaningList = new ArrayList<>();
+        // record button will switch the app to record display
         recordBtn.setOnClickListener(view -> {
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
             builder.setTitle(R.string.reset)
@@ -155,6 +157,7 @@ public class DictionaryMainActivity extends AppCompatActivity {
                     .setNegativeButton("No", (dialog, cl)->{} )
                     .create().show();
         });
+        // reset to go back to search
         resetBtn.setOnClickListener(view -> {
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
             builder.setTitle(R.string.reset)
@@ -170,7 +173,6 @@ public class DictionaryMainActivity extends AppCompatActivity {
                     .create().show();
         });
 
-        final Boolean[] wordExistsInDB = {false};
         searchBtn.setOnClickListener(view -> {
                     CharSequence text = "Searching";
                     // display a short notice
@@ -181,7 +183,9 @@ public class DictionaryMainActivity extends AppCompatActivity {
                     // store user input
                     editor.putString("inputText", et.getText().toString());
                     editor.apply();
-                    final Executor[] thread2 = {Executors.newSingleThreadExecutor()};
+                    // check if the word exist in database first
+                    AtomicBoolean wordExistsInDB = new AtomicBoolean(false);
+                    Executor[] thread2 = {Executors.newSingleThreadExecutor()};
                     thread2[0].execute(() -> {
                         List<DictionaryItem> fromDatabase = dDAO.getAllItems();
                         // Check if there is a record that matches the user input
@@ -190,16 +194,14 @@ public class DictionaryMainActivity extends AppCompatActivity {
                                 // Display the matching record directly
                                 runOnUiThread(() -> {
                                     binding.dictionaryTitle.setText(item.getWord());
-                                    messages.add(item);
-                                    myAdapter.notifyItemChanged(messages.size() - 1);
                                     binding.defaultTextView.setText(item.definition.toString());
                                 });
-                                wordExistsInDB[0] = true;
+                                wordExistsInDB.set(true);
                                 return; // Exit the loop if a match is found
                             }
                         }
                     });
-                    if (wordExistsInDB[0] == false) {
+                    if (wordExistsInDB.get() == false) {
                         try {
                             String url = "https://api.dictionaryapi.dev/api/v2/entries/en/" + et.getText().toString();
 
@@ -210,7 +212,7 @@ public class DictionaryMainActivity extends AppCompatActivity {
                                             JSONObject content = response.getJSONObject(0);
                                             String word = content.getString("word");
                                             runOnUiThread(() -> binding.dictionaryTitle.setText(word));
-                                            displayText.append("Word: ").append(word).append("\n");
+                                            displayText.append("Word: ").append(word);
                                             JSONArray meaningArray = content.getJSONArray("meanings");
                                             for (int i = 0; i < meaningArray.length(); i++) {
                                                 JSONObject thisPartofSpeech = meaningArray.getJSONObject(i);
@@ -222,7 +224,7 @@ public class DictionaryMainActivity extends AppCompatActivity {
                                                     JSONObject currentDefinition = definitionArray.getJSONObject(j);
                                                     String currentDefinitionText = currentDefinition.getString("definition");
                                                     int defNum = j+1;
-                                                    displayText.append("definition"+defNum+": \n").append(currentDefinitionText).append("\n");
+                                                    displayText.append("\ndefinition"+defNum+": \n").append(currentDefinitionText).append("");
                                                 }
                                                 JSONArray synonymArray = thisPartofSpeech.getJSONArray("synonyms");
                                                 displayText.append(" \nsynonym:");
@@ -235,7 +237,7 @@ public class DictionaryMainActivity extends AppCompatActivity {
                                                     displayText.append(antonymArray.getString(k)).append("  ");
                                                 }
                                                 MeaningDetails meaning = new MeaningDetails(partOfSpeech, definitionArray, synonymArray, antonymArray);
-                                                meaningList.add(meaning);
+
                                             }
 
                                             SimpleDateFormat sdf = new SimpleDateFormat("EEEE, dd-MMM-yyyy hh-mm-ss a");
@@ -283,16 +285,38 @@ public class DictionaryMainActivity extends AppCompatActivity {
         switch( item.getItemId() )
         {
             // this case allows going to dictionary by clicking the icon
-            case R.id.dictionary_icon:
-                AlertDialog.Builder builder = new AlertDialog.Builder(this);
-                builder.setTitle(R.string.reset)
-                        .setMessage("Do you want to check past records?")
-                        .setPositiveButton("Yes",(dialog,cl)->{
-                            binding.dictionaryTitle.setText(R.string.dictionary);
-                            binding.enterWord.setText("");
-                        })
-                        .setNegativeButton("No", (dialog, cl)->{} )
-                        .create().show();
+            case R.id.deleteRecord:
+                DictionaryItem d = messages.get(selectedRow);
+                AlertDialog.Builder builder = new AlertDialog.Builder( DictionaryMainActivity.this );
+                builder.setMessage("Do you want to delete the record" + d.word);
+                builder.setTitle("Warning:");
+                builder.setNegativeButton("No",(dialog,cl)->{ });
+                builder.setPositiveButton("Yes",(dialog,cl)->{
+                    Executor thread5 = Executors.newSingleThreadExecutor();
+                    thread5.execute(new Runnable() {
+                        @Override
+                        public void run() {
+                            dDAO.deleteItem(d);
+                            messages.clear();
+                            List<DictionaryItem> fromDatabase = dDAO.getAllItems();
+                            messages.addAll(fromDatabase);
+                        }
+                    });
+
+                    myAdapter.notifyItemRemoved(selectedRow);
+                    Snackbar.make(binding.fragmentLocation, "You deleted message"+ d.word, Snackbar.LENGTH_SHORT).setAction("undo", click -> {
+                        messages.add(selectedRow,d);
+                        myAdapter.notifyItemInserted(selectedRow);
+                        Executor thread6 = Executors.newSingleThreadExecutor();
+                        thread6.execute(new Runnable() {
+                            @Override
+                            public void run() {
+                                dDAO.insertDefinition(d);
+                            }
+                        });
+                    }).show();
+                });
+                builder.create().show();
                 break ;
             case R.id.help:
                 AlertDialog.Builder builder2 = new AlertDialog.Builder(this);
@@ -357,36 +381,7 @@ public class DictionaryMainActivity extends AppCompatActivity {
                 DictionaryItem d = messages.get(position);
                 DictionaryItem selected = messages.get(position);
                 dictionaryModel.selectedMessage.postValue(selected);
-                AlertDialog.Builder builder = new AlertDialog.Builder( DictionaryMainActivity.this );
-                builder.setMessage("Do you want to delete the record" + wordText.getText());
-                builder.setTitle("Warning:");
-                builder.setNegativeButton("No",(dialog,cl)->{ });
-                builder.setPositiveButton("Yes",(dialog,cl)->{
-                    Executor thread5 = Executors.newSingleThreadExecutor();
-                    thread5.execute(new Runnable() {
-                        @Override
-                        public void run() {
-                            dDAO.deleteItem(d);
-                            messages.clear();
-                            List<DictionaryItem> fromDatabase = dDAO.getAllItems();
-                            messages.addAll(fromDatabase);
-                        }
-                    });
-
-                    myAdapter.notifyItemRemoved(position);
-                    Snackbar.make(definitionText, "You deleted message" + position, Snackbar.LENGTH_SHORT).setAction("undo", click -> {
-                        messages.add(position,d);
-                        myAdapter.notifyItemInserted(position);
-                        Executor thread6 = Executors.newSingleThreadExecutor();
-                        thread6.execute(new Runnable() {
-                            @Override
-                            public void run() {
-                                dDAO.insertDefinition(d);
-                            }
-                        });
-                    }).show();
-                });
-                builder.create().show();
+                selectedRow = position;
         });
     }
     }

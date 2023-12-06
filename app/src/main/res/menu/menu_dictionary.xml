@@ -22,4 +22,7 @@
         android:icon="@android:drawable/ic_menu_help"
         android:title="@string/help"
         app:showAsAction="always" />
+    <item
+        android:id="@+id/deleteRecord"
+        android:title="@string/record_delete" />
 </menu>
