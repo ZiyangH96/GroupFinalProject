@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -32,6 +33,7 @@ import com.google.android.material.snackbar.Snackbar;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.w3c.dom.Text;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -75,6 +77,8 @@ public class DictionaryMainActivity extends AppCompatActivity {
         Button recordBtn = binding.helpButton;
         Button resetBtn = binding.resetButton;
         TextView title = binding.dictionaryTitle;
+        TextView mainText = binding.defaultTextView;
+        mainText.setMovementMethod(new ScrollingMovementMethod());
 
         // define queue for api connection
         RequestQueue queue;
