@@ -1,32 +1,31 @@
-package algonquin.cst2355.groupfinalproject.SunriseSunset;// DatabaseHelper.java
+package algonquin.cst2355.groupfinalproject.SunriseSunset;
+
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-
 import java.util.ArrayList;
 import java.util.List;
 
-import algonquin.cst2355.groupfinalproject.SunriseSunset.LocationItem;
+public class SunriseSunsetDatabase extends SQLiteOpenHelper {
 
-public class DatabaseHelper extends SQLiteOpenHelper {
-
-    private static final String DATABASE_NAME = "favorites.db";
+    private static final String DATABASE_NAME = "SunriseSunsetDB";
     private static final int DATABASE_VERSION = 1;
+
     private static final String TABLE_FAVORITES = "favorites";
     private static final String COLUMN_ID = "id";
     private static final String COLUMN_LATITUDE = "latitude";
     private static final String COLUMN_LONGITUDE = "longitude";
 
-    public DatabaseHelper(Context context) {
+    public SunriseSunsetDatabase(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        String createTableQuery = "CREATE TABLE " + TABLE_FAVORITES +
-                " (" + COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+        String createTableQuery = "CREATE TABLE " + TABLE_FAVORITES + " (" +
+                COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 COLUMN_LATITUDE + " TEXT, " +
                 COLUMN_LONGITUDE + " TEXT)";
         db.execSQL(createTableQuery);
@@ -38,38 +37,43 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         onCreate(db);
     }
 
-    public void addFavoriteLocation(String latitude, String longitude) {
+    public void saveLocation(LocationItem locationItem) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
-        values.put(COLUMN_LATITUDE, latitude);
-        values.put(COLUMN_LONGITUDE, longitude);
+        values.put(COLUMN_LATITUDE, locationItem.getLatitude());
+        values.put(COLUMN_LONGITUDE, locationItem.getLongitude());
         db.insert(TABLE_FAVORITES, null, values);
         db.close();
     }
 
     public List<LocationItem> getFavoriteLocations() {
-        List<LocationItem> favoriteLocations = new ArrayList<>();
-        SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursor = db.rawQuery("SELECT * FROM " + TABLE_FAVORITES, null);
+        List<LocationItem> locationList = new ArrayList<>();
+        String selectQuery = "SELECT * FROM " + TABLE_FAVORITES;
+
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
 
         if (cursor.moveToFirst()) {
             do {
                 String latitude = cursor.getString(cursor.getColumnIndex(COLUMN_LATITUDE));
                 String longitude = cursor.getString(cursor.getColumnIndex(COLUMN_LONGITUDE));
-                favoriteLocations.add(new LocationItem(latitude, longitude));
+
+                LocationItem locationItem = new LocationItem(latitude, longitude);
+                locationList.add(locationItem);
             } while (cursor.moveToNext());
         }
 
         cursor.close();
         db.close();
-        return favoriteLocations;
+        return locationList;
     }
 
-    public void deleteFavoriteLocation(String latitude, String longitude) {
+    public void deleteLocation(LocationItem locationItem) {
         SQLiteDatabase db = this.getWritableDatabase();
         db.delete(TABLE_FAVORITES,
                 COLUMN_LATITUDE + " = ? AND " + COLUMN_LONGITUDE + " = ?",
-                new String[]{latitude, longitude});
+                new String[]{locationItem.getLatitude(), locationItem.getLongitude()});
         db.close();
     }
 }
+

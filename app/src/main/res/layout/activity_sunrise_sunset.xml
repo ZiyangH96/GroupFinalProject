@@ -1,41 +1,25 @@
-<!-- activity_sunrise_sunset.xml -->
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".SunriseSunsetMainActivity">
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:layout_marginTop="8dp"
+    android:layout_marginBottom="8dp">
 
-    <!-- Toolbar -->
-    <androidx.appcompat.widget.Toolbar
-        android:id="@+id/toolbar"
-        android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
-        android:background="?attr/colorPrimary"
-        app:title="Sunrise Sunset"
-        app:titleTextColor="@android:color/white" />
-
-    <!-- Latitude EditText -->
     <EditText
         android:id="@+id/editTextLatitude"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/toolbar"
-        android:layout_marginTop="16dp"
-        android:hint="Latitude"
-        android:inputType="numberDecimal|numberSigned"/>
+        android:hint="Latitude"/>
 
-    <!-- Longitude EditText -->
     <EditText
         android:id="@+id/editTextLongitude"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/editTextLatitude"
         android:layout_marginTop="8dp"
-        android:hint="Longitude"
-        android:inputType="numberDecimal|numberSigned"/>
+        android:hint="Longitude"/>
 
-    <!-- Lookup Button -->
     <Button
         android:id="@+id/buttonLookup"
         android:layout_width="wrap_content"
@@ -44,50 +28,46 @@
         android:layout_marginTop="16dp"
         android:text="Lookup"/>
 
-    <!-- Save to Favorites Button -->
+    <EditText
+        android:id="@+id/textViewSunInfo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/buttonLookup"
+        android:layout_marginTop="16dp"/>
+
     <Button
         android:id="@+id/buttonSaveToFavorites"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/buttonLookup"
+        android:layout_below="@id/textViewSunInfo"
         android:layout_marginTop="16dp"
         android:text="Save to Favorites"/>
 
-    <!-- View Favorites Button -->
     <Button
         android:id="@+id/buttonViewFavorites"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/buttonSaveToFavorites"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="8dp"
         android:text="View Favorites"/>
 
-    <!-- Delete Favorite Button -->
-    <Button
+    <!--<Button
         android:id="@+id/buttonDeleteFavorite"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/buttonViewFavorites"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="8dp"
         android:text="Delete Favorite"/>
+        -->
 
-    <!-- RecyclerView -->
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerView"
+        android:id="@+id/recyclerViewFavorites"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/buttonDeleteFavorite"
-        android:layout_marginTop="16dp"
-        android:visibility="gone"/>
-
-    <!-- API Results TextView -->
-    <TextView
-        android:id="@+id/textViewResult"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/recyclerView"
+        android:layout_below="@id/buttonViewFavorites"
         android:layout_marginTop="16dp"/>
+
 
     <!-- Add other UI elements as needed -->
 
-</RelativeLayout>
+</LinearLayout>

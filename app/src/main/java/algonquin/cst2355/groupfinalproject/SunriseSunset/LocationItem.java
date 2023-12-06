@@ -1,5 +1,4 @@
 package algonquin.cst2355.groupfinalproject.SunriseSunset;
-// LocationItem.java
 public class LocationItem {
     private String latitude;
     private String longitude;
