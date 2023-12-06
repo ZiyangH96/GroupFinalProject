@@ -42,6 +42,8 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import algonquin.cst2355.groupfinalproject.DeezerSongSearcher.DeezerSearchActivity;
+import algonquin.cst2355.groupfinalproject.MainActivity;
+
 import algonquin.cst2355.groupfinalproject.R;
 import algonquin.cst2355.groupfinalproject.RecipeSearch.RecipeSearchMainActivity;
 import algonquin.cst2355.groupfinalproject.SunriseSunset.SunriseSunsetMainActivity;
