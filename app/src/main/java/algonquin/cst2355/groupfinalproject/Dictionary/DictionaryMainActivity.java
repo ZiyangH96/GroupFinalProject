@@ -8,6 +8,8 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -16,11 +18,14 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.room.Room;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.JsonArrayRequest;
-import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.google.android.material.snackbar.Snackbar;
 
@@ -28,29 +33,34 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.concurrent.atomic.AtomicReference;
+import java.util.Date;
+import java.util.List;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
+import java.util.concurrent.atomic.AtomicBoolean;
 
-import algonquin.cst2355.groupfinalproject.DeezerSongSearcher.DeezerSongMainActivity;
-import algonquin.cst2355.groupfinalproject.MainActivity;
+import algonquin.cst2355.groupfinalproject.DeezerSongSearcher.DeezerSearchActivity;
 import algonquin.cst2355.groupfinalproject.R;
 import algonquin.cst2355.groupfinalproject.RecipeSearch.RecipeSearchMainActivity;
 import algonquin.cst2355.groupfinalproject.SunriseSunset.SunriseSunsetMainActivity;
+import algonquin.cst2355.groupfinalproject.databinding.DefinitionBinding;
 import algonquin.cst2355.groupfinalproject.databinding.DictionaryActivityMainBinding;
 
 public class DictionaryMainActivity extends AppCompatActivity {
 
     private DictionaryActivityMainBinding binding;
-
+    private RecyclerView.Adapter myAdapter = null;
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
         getMenuInflater().inflate(R.menu.menu_dictionary, menu);
         return true;
     }
-
+    ArrayList<DictionaryItem> messages = new ArrayList<>();
+    DictionaryItemDAO dDAO;
+    DictionaryMainViewModel dictionaryModel;
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
@@ -58,18 +68,68 @@ public class DictionaryMainActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
 
         setSupportActionBar(binding.dictionaryToolBar);
-
-        SharedPreferences prefs = getSharedPreferences("MyData", Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = prefs.edit();
         EditText et = binding.enterWord;
         Button searchBtn = binding.searchButton;
         Button resetBtn = binding.helpButton;
         TextView title = binding.dictionaryTitle;
 
-        // queue
+        // define queue for api connection
         RequestQueue queue;
         queue = Volley.newRequestQueue(this);
 
+        // create database
+        DictionaryDB db = Room.databaseBuilder(getApplicationContext(), DictionaryDB.class, "database-name").build();
+
+        dDAO = db.diDAO();
+
+        // use shared preference to store and restore inputs
+        SharedPreferences prefs = getSharedPreferences("MyData", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = prefs.edit();
+        String userInput = prefs.getString("inputText","");
+        et.setText(userInput);
+        // get everything from db
+        dictionaryModel = new ViewModelProvider(this).get(DictionaryMainViewModel.class);
+        messages = dictionaryModel.messages.getValue();
+
+        Executor thread = Executors.newSingleThreadExecutor();
+        thread.execute(() -> {
+            List<DictionaryItem> fromDatabase = dDAO.getAllItems();
+            messages.addAll(fromDatabase);
+        });
+        if (messages == null) {
+            dictionaryModel.messages.postValue(messages = new ArrayList<>());
+        }
+        dictionaryModel.selectedMessage.observe(this, (newValue) -> {
+            MessageDetailsFragment wordFragment = new MessageDetailsFragment(newValue);
+            getSupportFragmentManager()
+                    .beginTransaction()
+                    .replace(R.id.fragmentLocation,wordFragment)
+                    .addToBackStack("")
+                    .commit();
+        });
+
+        myAdapter = new RecyclerView.Adapter<MyRowHolder>() {
+            @NonNull
+            @Override
+            public MyRowHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+                DefinitionBinding binding = DefinitionBinding.inflate(getLayoutInflater(), parent, false);
+                return  new MyRowHolder(binding.getRoot());
+            }
+
+            @Override
+            public void onBindViewHolder(@NonNull MyRowHolder holder, int position) {
+                holder.definitionText.setText(messages.get(position).getWord());
+            }
+
+            @Override
+            public int getItemCount() {
+                return messages.size();
+            }
+        };
+        binding.myRecyclerView.setAdapter( myAdapter );
+
+        // Allow scrolling
+        binding.myRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         ArrayList<MeaningDetails> meaningList = new ArrayList<>();
         resetBtn.setOnClickListener(view -> {
@@ -79,7 +139,6 @@ public class DictionaryMainActivity extends AppCompatActivity {
                     .setPositiveButton("Yes",(dialog,cl)->{
                         meaningList.clear();
                         binding.dictionaryTitle.setText(R.string.dictionary);
-                        binding.definition.setText(R.string.definition);
                         Snackbar.make(et, "reset",Snackbar.LENGTH_SHORT)
                                 .setAction("Undo", clk ->{
                                 // TODO implement method to get the definition back
@@ -90,65 +149,101 @@ public class DictionaryMainActivity extends AppCompatActivity {
                     .setNegativeButton("No", (dialog, cl)->{} )
                     .create().show();
         });
-        searchBtn.setOnClickListener(view ->{
+        searchBtn.setOnClickListener(view -> {
 
-            CharSequence text = "Searching";
+                    CharSequence text = "Searching";
+                    // display a short notice
                     int duration = Toast.LENGTH_SHORT;
                     Toast toast = Toast.makeText(this, text, duration);
                     toast.show();
-            try {
-                String url = "https://api.dictionaryapi.dev/api/v2/entries/en/"+et.getText().toString();
 
-                StringBuilder displayText = new StringBuilder();
-                JsonArrayRequest request = new JsonArrayRequest(Request.Method.GET, url, null,
-                        (response) -> {
-                            try {
+                    // store user input
+                    editor.putString("inputText", et.getText().toString());
+                    editor.apply();
+                    AtomicBoolean wordExistsInDB = new AtomicBoolean(false);
+                    Executor thread2 = Executors.newSingleThreadExecutor();
+                    thread2.execute(() -> {
 
-                                    JSONObject content = response.getJSONObject(0);
-                                    String word = content.getString("word");
-                                    runOnUiThread( (  )  -> {
-                                        binding.dictionaryTitle.setText(word);
-                                            });
-                                        displayText.append("Word: ").append(word).append("\n");
-                                        JSONArray meaningArray = content.getJSONArray("meanings");
-                                        for (int i=0;i<meaningArray.length();i++){
-                                            JSONObject thisPartofSpeech = meaningArray.getJSONObject(i);
-                                            String partOfSpeech = thisPartofSpeech.getString("partOfSpeech");
-                                            displayText.append("Part of Speech: ").append(partOfSpeech).append("\n");
-                                            JSONArray definitionArray = thisPartofSpeech.getJSONArray("definitions");
-                                            JSONObject firstDefinition = definitionArray.getJSONObject(0);
-                                            String firstDefinitionText = firstDefinition.getString("definition");
-                                            displayText.append("definitions: \n").append(firstDefinitionText).append("\n");
-                                            JSONArray synonymArray = thisPartofSpeech.getJSONArray("synonyms");
-                                            displayText.append("synonym: \n");
-                                            for (int k=0;k<synonymArray.length();k++){
-                                                displayText.append(synonymArray.getString(k)).append("\n");
-                                            }
-                                            displayText.append("antonym: \n");
-                                            JSONArray antonymArray = thisPartofSpeech.getJSONArray("antonyms");
-                                            for (int k=0;k<antonymArray.length();k++){
-                                                displayText.append(antonymArray.getString(k)).append("\n");
-                                            }
-                                            MeaningDetails meaning = new MeaningDetails(partOfSpeech,definitionArray,synonymArray,antonymArray);
-                                            meaningList.add(meaning);
-                                            runOnUiThread( (  )  -> {
-                                                binding.definition.setText(displayText.toString());
-                                            });
-
-                                }
-
-                            }catch (JSONException e){
-                                e.printStackTrace();
+                        List<DictionaryItem> fromDatabase = dDAO.getAllItems();
+                        // Check if there is a record that matches the user input
+                        for (DictionaryItem item : fromDatabase) {
+                            if (item.getWord().equalsIgnoreCase(et.getText().toString())) {
+                                // Display the matching record directly
+                                runOnUiThread(() -> {
+                                    binding.dictionaryTitle.setText(item.getWord());
+                                    messages.add(item);
+                                    myAdapter.notifyItemChanged(messages.size() - 1);
+                                    wordExistsInDB.set(true);
+                                });
+                                return; // Exit the loop if a match is found
                             }
-                        },
-                        (error) -> {
-                            // Do something with loaded bitmap...
-                            Log.d("Error","No word found");
-                        });
-                queue.add(request);
-            }catch (Exception e) {
-                e.printStackTrace();
-            }
+                        }
+                    });
+                    if (!wordExistsInDB.get()) {
+                        try {
+                            String url = "https://api.dictionaryapi.dev/api/v2/entries/en/" + et.getText().toString();
+
+                            StringBuilder displayText = new StringBuilder();
+                            JsonArrayRequest request = new JsonArrayRequest(Request.Method.GET, url, null,
+                                    (response) -> {
+                                        try {
+
+                                            JSONObject content = response.getJSONObject(0);
+                                            String word = content.getString("word");
+                                            runOnUiThread(() -> binding.dictionaryTitle.setText(word));
+                                            displayText.append("Word: ").append(word).append("\n");
+                                            JSONArray meaningArray = content.getJSONArray("meanings");
+                                            for (int i = 0; i < meaningArray.length(); i++) {
+                                                JSONObject thisPartofSpeech = meaningArray.getJSONObject(i);
+                                                String partOfSpeech = thisPartofSpeech.getString("partOfSpeech");
+                                                displayText.append("Part of Speech: ").append(partOfSpeech).append("\n");
+                                                JSONArray definitionArray = thisPartofSpeech.getJSONArray("definitions");
+                                                // get at most 3 definitions in case there are too many to display
+                                                for (int j = 0; j < Math.min(3, definitionArray.length()); j++) {
+                                                    JSONObject currentDefinition = definitionArray.getJSONObject(j);
+                                                    String currentDefinitionText = currentDefinition.getString("definition");
+                                                    displayText.append("definition"+j+": \n").append(currentDefinitionText).append("\n");
+                                                }
+                                                JSONArray synonymArray = thisPartofSpeech.getJSONArray("synonyms");
+                                                displayText.append("synonym: \n");
+                                                for (int k = 0; k < synonymArray.length(); k++) {
+                                                    displayText.append(synonymArray.getString(k)).append("\n");
+                                                }
+                                                displayText.append("antonym: \n");
+                                                JSONArray antonymArray = thisPartofSpeech.getJSONArray("antonyms");
+                                                for (int k = 0; k < antonymArray.length(); k++) {
+                                                    displayText.append(antonymArray.getString(k)).append("\n");
+                                                }
+                                                MeaningDetails meaning = new MeaningDetails(partOfSpeech, definitionArray, synonymArray, antonymArray);
+                                                meaningList.add(meaning);
+
+                                                SimpleDateFormat sdf = new SimpleDateFormat("EEEE, dd-MMM-yyyy hh-mm-ss a");
+                                                String currentDateandTime = sdf.format(new Date());
+                                                DictionaryItem newItem = new DictionaryItem(currentDateandTime, word, displayText.toString());
+                                                // add to database
+                                                Executor thread3 = Executors.newSingleThreadExecutor();
+                                                thread3.execute(() -> {
+                                                    List<DictionaryItem> fromDatabase = dDAO.getAllItems();
+                                                    dDAO.insertDefinition(newItem);
+                                                    messages.clear();
+                                                    messages.addAll(fromDatabase);
+                                                });
+                                                myAdapter.notifyItemChanged(messages.size() - 1);
+                                            }
+
+                                        } catch (JSONException e) {
+                                            e.printStackTrace();
+                                        }
+                                    },
+                                    (error) -> {
+                                        // Do something with loaded bitmap...
+                                        Log.d("Error", "No word found");
+                                    });
+                            queue.add(request);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
                 }
                 );
 
@@ -173,7 +268,6 @@ public class DictionaryMainActivity extends AppCompatActivity {
                         .setMessage("Do you want to reset?")
                         .setPositiveButton("Yes",(dialog,cl)->{
                             binding.dictionaryTitle.setText(R.string.dictionary);
-                            binding.definition.setText(R.string.definition);
                             binding.enterWord.setText("");
                         })
                         .setNegativeButton("No", (dialog, cl)->{} )
@@ -192,7 +286,7 @@ public class DictionaryMainActivity extends AppCompatActivity {
                 AlertDialog.Builder builder3 = new AlertDialog.Builder(this);
                 builder3.setTitle(R.string.deezer)
                         .setPositiveButton(R.string.sure,(dialog,cl)->{
-                            Intent goBackToMain = new Intent(DictionaryMainActivity.this, DeezerSongMainActivity.class);
+                            Intent goBackToMain = new Intent(DictionaryMainActivity.this, DeezerSearchActivity.class);
                             startActivity(goBackToMain);
                         })
                         .setNegativeButton(R.string.nothx,(dialog,cl)->{
@@ -224,6 +318,49 @@ public class DictionaryMainActivity extends AppCompatActivity {
         }
         return super.onOptionsItemSelected(item);
 
+    }
+
+    class MyRowHolder extends RecyclerView.ViewHolder{
+
+        TextView definitionText;
+        public MyRowHolder(@NonNull View itemView) {
+            super(itemView);
+            itemView.setOnClickListener(clk -> {
+                int position =  getAdapterPosition();
+                DictionaryItem d = messages.get(position);
+                DictionaryItem selected = messages.get(position);
+                dictionaryModel.selectedMessage.postValue(selected);
+                definitionText = itemView.findViewById(R.id.definitionText);
+
+                AlertDialog.Builder builder = new AlertDialog.Builder( DictionaryMainActivity.this );
+                builder.setMessage("Do you want to delete the record" + definitionText.getText());
+                builder.setTitle("Warning:");
+                builder.setNegativeButton("No",(dialog,cl)->{ });
+                builder.setPositiveButton("Yes",(dialog,cl)->{
+                    Executor thread5 = Executors.newSingleThreadExecutor();
+                    thread5.execute(new Runnable() {
+                        @Override
+                        public void run() {
+                            dDAO.deleteItem(d);
+                        }
+                    });
+                    messages.remove(position);
+                    myAdapter.notifyItemRemoved(position);
+                    Snackbar.make(definitionText, "You deleted message" + position, Snackbar.LENGTH_SHORT).setAction("undo", click -> {
+                        messages.add(position,d);
+                        myAdapter.notifyItemInserted(position);
+                        Executor thread6 = Executors.newSingleThreadExecutor();
+                        thread6.execute(new Runnable() {
+                            @Override
+                            public void run() {
+                                dDAO.insertDefinition(d);
+                            }
+                        });
+                    }).show();
+                });
+                builder.create().show();
+        });
+    }
     }
 
     static class MeaningDetails {
