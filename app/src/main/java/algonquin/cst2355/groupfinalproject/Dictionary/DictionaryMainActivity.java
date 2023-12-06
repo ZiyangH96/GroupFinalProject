@@ -33,7 +33,7 @@ import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.concurrent.atomic.AtomicReference;
 
-import algonquin.cst2355.groupfinalproject.DeezerSongSearcher.DeezerSongMainActivity;
+import algonquin.cst2355.groupfinalproject.DeezerSongSearcher.DeezerSearchActivity;
 import algonquin.cst2355.groupfinalproject.MainActivity;
 import algonquin.cst2355.groupfinalproject.R;
 import algonquin.cst2355.groupfinalproject.RecipeSearch.RecipeSearchMainActivity;
@@ -192,7 +192,7 @@ public class DictionaryMainActivity extends AppCompatActivity {
                 AlertDialog.Builder builder3 = new AlertDialog.Builder(this);
                 builder3.setTitle(R.string.deezer)
                         .setPositiveButton(R.string.sure,(dialog,cl)->{
-                            Intent goBackToMain = new Intent(DictionaryMainActivity.this, DeezerSongMainActivity.class);
+                            Intent goBackToMain = new Intent(DictionaryMainActivity.this, DeezerSearchActivity.class);
                             startActivity(goBackToMain);
                         })
                         .setNegativeButton(R.string.nothx,(dialog,cl)->{
