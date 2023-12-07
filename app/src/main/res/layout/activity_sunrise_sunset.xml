@@ -9,6 +9,7 @@
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
         android:background="?attr/colorPrimary"
+        app:title="@string/Sunrise_Sunset_app"
         app:popupTheme="@style/AppTheme.PopupOverlay" />
 
     <LinearLayout
@@ -23,7 +24,7 @@
         android:id="@+id/editTextLatitude"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Latitude"/>
+        android:hint="@string/enter_latitude"/>
 
     <EditText
         android:id="@+id/editTextLongitude"
@@ -31,7 +32,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/editTextLatitude"
         android:layout_marginTop="8dp"
-        android:hint="Longitude"/>
+        android:hint="@string/enter_longitude"/>
 
     <Button
         android:id="@+id/buttonLookup"
@@ -39,7 +40,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/editTextLongitude"
         android:layout_marginTop="16dp"
-        android:text="Lookup"/>
+        android:text="@string/lookup_button"/>
 
     <TextView
         android:id="@+id/textViewSunInfo"
@@ -54,7 +55,8 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/textViewSunInfo"
         android:layout_marginTop="16dp"
-        android:text="Save to Favorites"/>
+        android:text="@string/save_to_favorites_button"
+        />
 
     <Button
         android:id="@+id/buttonViewFavorites"
@@ -62,7 +64,8 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/buttonSaveToFavorites"
         android:layout_marginTop="8dp"
-        android:text="View Favorites"/>
+        android:text="@string/view_favorites_button"
+        />
 
     <!--<Button
         android:id="@+id/buttonDeleteFavorite"

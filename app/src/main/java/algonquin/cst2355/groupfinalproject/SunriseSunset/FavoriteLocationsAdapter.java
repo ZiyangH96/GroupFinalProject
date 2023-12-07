@@ -35,8 +35,12 @@ public class FavoriteLocationsAdapter extends RecyclerView.Adapter<FavoriteLocat
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         LocationItem location = locations.get(position);
-        holder.textViewLocation.setText("Lat: " + location.getLatitude() + ", Lng: " + location.getLongitude());
+
+        // Format the location information using string resources
+        String locationInfo = holder.itemView.getContext().getString(R.string.location_info_format, location.getLatitude(), location.getLongitude());
+        holder.textViewLocation.setText(locationInfo);
     }
+
 
     @Override
     public int getItemCount() {

@@ -27,6 +27,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
+import com.google.android.material.snackbar.Snackbar;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -95,7 +96,8 @@ public class SunriseSunsetMainActivity extends AppCompatActivity {
                     // Perform sunrise-sunset API lookup using Volley
                     performSunLookup(latitude, longitude);
                 } else {
-                    Toast.makeText(SunriseSunsetMainActivity.this, "Please enter latitude and longitude", Toast.LENGTH_SHORT).show();
+                    String errorMessage = getString(R.string.latitude_longitude_empty);
+                    Toast.makeText(SunriseSunsetMainActivity.this, errorMessage, Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -140,12 +142,6 @@ public class SunriseSunsetMainActivity extends AppCompatActivity {
             }
         });
 
-
-
-
-
-
-        // Add onClickListeners for other buttons as needed
     }
 
     private void performSunLookup(String latitude, String longitude) {
@@ -176,7 +172,9 @@ public class SunriseSunsetMainActivity extends AppCompatActivity {
             String date = response.getJSONObject("results").getString("date");
 
             // Display sunrise, sunset, and date in textViewSunInfo
-            String sunInfo = "Date: " + date + "\nSunrise: " + sunrise + "\nSunset: " + sunset;
+            String sunInfo = getString(R.string.sun_info_date, date) +
+                    "\n" + getString(R.string.sun_info_sunrise, sunrise) +
+                    "\n" + getString(R.string.sun_info_sunset, sunset);
             textViewSunInfo.setText(sunInfo);
 
             // Save the current search term, latitude, longitude, and date to SharedPreferences
@@ -194,11 +192,9 @@ public class SunriseSunsetMainActivity extends AppCompatActivity {
 
 
 
-
-
     private void handleSunLookupError(VolleyError error) {
         // Handle errors (e.g., show an error message to the user)
-        Toast.makeText(SunriseSunsetMainActivity.this, "Error fetching data", Toast.LENGTH_SHORT).show();
+        Toast.makeText(SunriseSunsetMainActivity.this, R.string.error_fetching_data, Toast.LENGTH_SHORT).show();
     }
 
     private void saveToFavorites() {
@@ -208,10 +204,13 @@ public class SunriseSunsetMainActivity extends AppCompatActivity {
         if (!latitude.isEmpty() && !longitude.isEmpty()) {
             LocationItem locationItem = new LocationItem(latitude, longitude);
             sunriseSunsetDatabase.saveLocation(locationItem);
-            Toast.makeText(SunriseSunsetMainActivity.this, "Location saved to favorites", Toast.LENGTH_SHORT).show();
+            showSnackbar(getString(R.string.location_saved_to_favorites));
         } else {
-            Toast.makeText(SunriseSunsetMainActivity.this, "Please enter latitude and longitude", Toast.LENGTH_SHORT).show();
+            Toast.makeText(SunriseSunsetMainActivity.this, R.string.please_enter_latitude_longitude, Toast.LENGTH_SHORT).show();
         }
+    }
+    private void showSnackbar(String message) {
+        Snackbar.make(findViewById(android.R.id.content), message, Snackbar.LENGTH_SHORT).show();
     }
 
     private void loadFavoriteLocations() {
@@ -228,16 +227,16 @@ public class SunriseSunsetMainActivity extends AppCompatActivity {
 
     private void showDeleteConfirmationDialog(final int position) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Delete Favorite Location");
-        builder.setMessage("Are you sure you want to delete this favorite location?");
-        builder.setPositiveButton("Delete", new DialogInterface.OnClickListener() {
+        builder.setTitle(R.string.delete_favorite_location_title);
+        builder.setMessage(R.string.delete_favorite_location_message);
+        builder.setPositiveButton(R.string.delete, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 // Delete the selected favorite location
                 deleteFavoriteLocation(position);
             }
         });
-        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+        builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 dialog.dismiss();
@@ -269,14 +268,9 @@ public class SunriseSunsetMainActivity extends AppCompatActivity {
 
     private void showHelpDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Help");
-        builder.setMessage("Instructions for using the Sunrise & Sunset Lookup app:\n\n" +
-                "1. Enter the latitude and longitude of the location.\n" +
-                "2. Click the 'Lookup' button to get sunrise and sunset times.\n" +
-                "3. Save locations to favorites and view them in the favorites list.\n" +
-                "4. Delete favorite locations if needed.\n" +
-                "5. The search term is saved for the next use.");
-        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+        builder.setTitle(R.string.help_dialog_title);
+        builder.setMessage(R.string.help_dialog_message);
+        builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 dialog.dismiss();
@@ -285,11 +279,5 @@ public class SunriseSunsetMainActivity extends AppCompatActivity {
         builder.create().show();
     }
 
-
-
-
-
-
-    // Other methods...
 }
 

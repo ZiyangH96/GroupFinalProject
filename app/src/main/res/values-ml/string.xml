@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">ഫൈനൽ ഗ്രൂപ്പ് പ്രോജക്റ്റ്</string>
+    <string name="Sunrise_Sunset_app">സൂര്യോദയം സൂര്യാസ്തമയ ആപ്പ്</string>
+    <string name="enter_latitude">അക്ഷാംശം</string>
+    <string name="enter_longitude">രേഖാംശം</string>
+    <string name="lookup_button">തിരയുക</string>
+    <string name="sun_info_label">സൂര്യനെക്കുറിച്ചുള്ള വിവരങ്ങൾ:</string>
+    <string name="save_to_favorites_button">പ്രിയപ്പെട്ടവയിലേക്ക് സംരക്ഷിക്കുക</string>
+    <string name="view_favorites_button">പ്രിയപ്പെട്ടവ കാണുക</string>
+    <string name="latitude_longitude_empty">ദയവായി അക്ഷാംശവും രേഖാംശവും നൽകുക</string>
+    <string name="sun_info_date">തീയതി: %1$s</string>
+    <string name="sun_info_sunrise">സൂര്യോദയം: %1$s</string>
+    <string name="sun_info_sunset">സൂര്യാസ്തമയം: %1$s</string>
+    <string name="error_fetching_data">ഡാറ്റ ലഭ്യമാക്കുന്നതിൽ പിശക്</string>
+    <string name="location_saved_to_favorites">പ്രിയപ്പെട്ടവയിലേക്ക് ലൊക്കേഷൻ സംരക്ഷിച്ചു</string>
+    <string name="please_enter_latitude_longitude">ദയവായി അക്ഷാംശവും രേഖാംശവും നൽകുക</string>
+    <string name="dictionary">നിഘണ്ടു</string>
+    <string name="delete_favorite_location_title">പ്രിയപ്പെട്ട ലൊക്കേഷൻ ഇല്ലാതാക്കുക</string>
+    <string name="delete_favorite_location_message">ഈ പ്രിയപ്പെട്ട ലൊക്കേഷൻ ഇല്ലാതാക്കണമെന്ന് തീർച്ചയാണോ?</string>
+    <string name="delete">ഇല്ലാതാക്കുക</string>
+    <string name="cancel">റദ്ദാക്കുക</string>
+    <string name="help_dialog_title">സഹായം</string>
+    <string name="help_dialog_message">സൂര്യോദയം ഉപയോഗിക്കുന്നതിനുള്ള നിർദ്ദേശങ്ങൾ &amp; സൺസെറ്റ് ലുക്ക്അപ്പ് ആപ്പ്:\n\n
+        1. സ്ഥലത്തിന്റെ അക്ഷാംശവും രേഖാംശവും നൽകുക.\n
+        2. സൂര്യോദയത്തിന്റെയും സൂര്യാസ്തമയത്തിന്റെയും സമയം ലഭിക്കാൻ "ലുക്ക്അപ്പ്" ബട്ടൺ ക്ലിക്ക് ചെയ്യുക.\n
+        3. പ്രിയപ്പെട്ടവയിലേക്ക് ലൊക്കേഷനുകൾ സംരക്ഷിച്ച് അവയെ പ്രിയപ്പെട്ടവ പട്ടികയിൽ കാണുക.\n
+        4. ആവശ്യമെങ്കിൽ പ്രിയപ്പെട്ട ലൊക്കേഷനുകൾ ഇല്ലാതാക്കുക.\n
+        5. തിരയൽ പദം അടുത്ത ഉപയോഗത്തിനായി സംരക്ഷിച്ചിരിക്കുന്നു.</string>
+    <string name="ok">ശരി</string>
+    <string name="location_info_format">ലാറ്റ്: %1$s, ലാംഗ്: %2$s</string>
+</resources>
