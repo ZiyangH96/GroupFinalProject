@@ -38,6 +38,9 @@ import java.util.List;
 import algonquin.cst2355.groupfinalproject.Dictionary.DictionaryMainActivity;
 import algonquin.cst2355.groupfinalproject.R;
 
+/**
+ * The {@code SunriseSunsetMainActivity} class represents the main activity of the Sunrise & Sunset Lookup app.
+ */
 public class SunriseSunsetMainActivity extends AppCompatActivity {
 
     private EditText editTextLatitude, editTextLongitude;
@@ -53,7 +56,11 @@ public class SunriseSunsetMainActivity extends AppCompatActivity {
     private RecyclerView recyclerViewFavorites;
     private FavoriteLocationsAdapter favoritesAdapter;
 
-
+    /**
+     * Initializes the activity and sets up UI components and event listeners.
+     *
+     * @param savedInstanceState A Bundle containing the activity's previously saved state, or null if no state exists.
+     */
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -165,6 +172,11 @@ public class SunriseSunsetMainActivity extends AppCompatActivity {
         requestQueue.add(jsonObjectRequest);
     }
 
+    /**
+     * Displays the response from the sunrise-sunset API in the UI.
+     *
+     * @param response The JSON response from the API.
+     */
     private void handleSunLookupResponse(JSONObject response) {
         try {
             String sunrise = response.getJSONObject("results").getString("sunrise");
@@ -191,12 +203,19 @@ public class SunriseSunsetMainActivity extends AppCompatActivity {
     }
 
 
-
+    /**
+     * Handles errors that occur during the sunrise-sunset API lookup.
+     *
+     * @param error The error that occurred.
+     */
     private void handleSunLookupError(VolleyError error) {
         // Handle errors (e.g., show an error message to the user)
         Toast.makeText(SunriseSunsetMainActivity.this, R.string.error_fetching_data, Toast.LENGTH_SHORT).show();
     }
 
+    /**
+     * Saves the current location to the list of favorite locations.
+     */
     private void saveToFavorites() {
         String latitude = editTextLatitude.getText().toString();
         String longitude = editTextLongitude.getText().toString();
@@ -209,15 +228,29 @@ public class SunriseSunsetMainActivity extends AppCompatActivity {
             Toast.makeText(SunriseSunsetMainActivity.this, R.string.please_enter_latitude_longitude, Toast.LENGTH_SHORT).show();
         }
     }
+
+    /**
+     * Displays a Snackbar with the given message.
+     *
+     * @param message The message to display in the Snackbar.
+     */
     private void showSnackbar(String message) {
         Snackbar.make(findViewById(android.R.id.content), message, Snackbar.LENGTH_SHORT).show();
     }
 
+    /**
+     * Loads and displays the list of favorite locations in the RecyclerView.
+     */
     private void loadFavoriteLocations() {
         List<LocationItem> favoriteLocations = sunriseSunsetDatabase.getFavoriteLocations();
         favoritesAdapter.setLocations(favoriteLocations);
     }
 
+    /**
+     * Deletes a favorite location from the list.
+     *
+     * @param position The position of the item to be deleted.
+     */
     private void deleteFavoriteLocation(int position) {
         LocationItem deletedLocation = favoritesAdapter.getItem(position);
         sunriseSunsetDatabase.deleteLocation(deletedLocation);
@@ -225,6 +258,11 @@ public class SunriseSunsetMainActivity extends AppCompatActivity {
     }
 
 
+    /**
+     * Shows a confirmation dialog before deleting a favorite location.
+     *
+     * @param position The position of the item to be deleted.
+     */
     private void showDeleteConfirmationDialog(final int position) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle(R.string.delete_favorite_location_title);
@@ -245,12 +283,24 @@ public class SunriseSunsetMainActivity extends AppCompatActivity {
         builder.create().show();
     }
 
+    /**
+     * Creates the options menu for the activity.
+     *
+     * @param menu The options menu in which items are placed.
+     * @return true for the menu to be displayed; false for it to be hidden.
+     */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_sunrise_sunset, menu);
         return true;
     }
 
+    /**
+     * Handles options menu item selections.
+     *
+     * @param item The menu item that was selected.
+     * @return true to consume the item here; false to allow normal menu processing to proceed.
+     */
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         int itemId = item.getItemId();
@@ -266,6 +316,9 @@ public class SunriseSunsetMainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    /**
+     * Displays the help dialog with instructions for using the app.
+     */
     private void showHelpDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle(R.string.help_dialog_title);
