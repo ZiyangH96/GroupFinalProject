@@ -3,14 +3,18 @@ package algonquin.cst2355.groupfinalproject.SunriseSunset;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -29,6 +33,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
+import algonquin.cst2355.groupfinalproject.Dictionary.DictionaryMainActivity;
 import algonquin.cst2355.groupfinalproject.R;
 
 public class SunriseSunsetMainActivity extends AppCompatActivity {
@@ -235,6 +240,38 @@ public class SunriseSunsetMainActivity extends AppCompatActivity {
         });
         builder.create().show();
     }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        if (item.getItemId() == R.id.action_help) {
+            showHelpDialog();
+            if (item.getItemId() == R.id.dictionary_MainActivity) {
+                // Open the OtherActivity when the menu item is clicked
+                Intent intent = new Intent(this, DictionaryMainActivity.class);
+                startActivity(intent);
+                return true;
+            }
+        }
+        return super.onOptionsItemSelected(item);
+    }
+    private void showHelpDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Help");
+        builder.setMessage("Instructions for using the Sunrise & Sunset Lookup app.");
+        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+        builder.create().show();
+    }
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_sunrise_sunset, menu);
+        return true;
+    }
+
 
 
 
