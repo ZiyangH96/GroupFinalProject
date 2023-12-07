@@ -17,6 +17,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -79,6 +80,10 @@ public class SunriseSunsetMainActivity extends AppCompatActivity {
 
         editTextLatitude.setText(previousLatitude);
         editTextLongitude.setText(previousLongitude);
+
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
 
         buttonLookup.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -242,22 +247,35 @@ public class SunriseSunsetMainActivity extends AppCompatActivity {
     }
 
     @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_sunrise_sunset, menu);
+        return true;
+    }
+
+    @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        if (item.getItemId() == R.id.action_help) {
+        int itemId = item.getItemId();
+        if (itemId == R.id.action_help) {
             showHelpDialog();
-            if (item.getItemId() == R.id.dictionary_MainActivity) {
-                // Open the OtherActivity when the menu item is clicked
-                Intent intent = new Intent(this, DictionaryMainActivity.class);
-                startActivity(intent);
-                return true;
-            }
+            return true;
+        } else if (itemId == R.id.dictionary_MainActivity) {
+            // Open the DictionaryMainActivity when the menu item is clicked
+            Intent intent = new Intent(this, DictionaryMainActivity.class);
+            startActivity(intent);
+            return true;
         }
         return super.onOptionsItemSelected(item);
     }
+
     private void showHelpDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Help");
-        builder.setMessage("Instructions for using the Sunrise & Sunset Lookup app.");
+        builder.setMessage("Instructions for using the Sunrise & Sunset Lookup app:\n\n" +
+                "1. Enter the latitude and longitude of the location.\n" +
+                "2. Click the 'Lookup' button to get sunrise and sunset times.\n" +
+                "3. Save locations to favorites and view them in the favorites list.\n" +
+                "4. Delete favorite locations if needed.\n" +
+                "5. The search term is saved for the next use.");
         builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
@@ -266,11 +284,7 @@ public class SunriseSunsetMainActivity extends AppCompatActivity {
         });
         builder.create().show();
     }
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_sunrise_sunset, menu);
-        return true;
-    }
+
 
 
 
