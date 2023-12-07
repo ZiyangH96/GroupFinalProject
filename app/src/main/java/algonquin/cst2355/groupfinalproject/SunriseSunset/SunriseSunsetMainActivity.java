@@ -69,9 +69,11 @@ public class SunriseSunsetMainActivity extends AppCompatActivity {
 
         // Load previous search term from SharedPreferences
         SharedPreferences prefs = getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
-        String previousSearchTerm = prefs.getString(SEARCH_TERM_KEY, "");
-        editTextLatitude.setText(previousSearchTerm);
-        editTextLongitude.setText(previousSearchTerm);
+        String previousLatitude = prefs.getString("latitude", "");
+        String previousLongitude = prefs.getString("longitude", "");
+
+        editTextLatitude.setText(previousLatitude);
+        editTextLongitude.setText(previousLongitude);
 
         buttonLookup.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -161,20 +163,28 @@ public class SunriseSunsetMainActivity extends AppCompatActivity {
         try {
             String sunrise = response.getJSONObject("results").getString("sunrise");
             String sunset = response.getJSONObject("results").getString("sunset");
+            String date = response.getJSONObject("results").getString("date");
 
-            // Display sunrise and sunset in textViewSunInfo
-            String sunInfo = "Sunrise: " + sunrise + "\nSunset: " + sunset;
+            // Display sunrise, sunset, and date in textViewSunInfo
+            String sunInfo = "Date: " + date + "\nSunrise: " + sunrise + "\nSunset: " + sunset;
             textViewSunInfo.setText(sunInfo);
 
-            // Save the current search term to SharedPreferences
+            // Save the current search term, latitude, longitude, and date to SharedPreferences
             SharedPreferences.Editor editor = getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE).edit();
             editor.putString(SEARCH_TERM_KEY, editTextLatitude.getText().toString());
+            editor.putString("latitude", editTextLatitude.getText().toString()); // Save latitude
+            editor.putString("longitude", editTextLongitude.getText().toString()); // Save longitude
+            editor.putString("date", date);
             editor.apply();
 
         } catch (JSONException e) {
             e.printStackTrace();
         }
     }
+
+
+
+
 
     private void handleSunLookupError(VolleyError error) {
         // Handle errors (e.g., show an error message to the user)
